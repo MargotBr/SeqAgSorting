@@ -261,8 +261,8 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.clust.stim = NUL
           axis.text.x = element_blank(),
           legend.position = "none")
       plot.legend.clust.part <- ggplot(NULL) +
-        geom_label(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
-        scale_fill_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
+        geom_label(data = res$res.plot.dendro.part$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
+        scale_fill_manual(values = palette.col[1 : nlevels(res$res.plot.dendro.part$data.labels$Cluster)]) +
         theme(
           plot.margin = unit(c(0,0,0,0), "cm"),
           legend.position = "bottom",
