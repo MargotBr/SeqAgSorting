@@ -660,5 +660,6 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
   message("Analysis performed")
   options(warn = 0)
   class(res) <- c("SAStask", "list ")
+  return(res)
 
 }
