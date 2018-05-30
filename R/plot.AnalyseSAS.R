@@ -144,7 +144,7 @@ plot.AnalyseSAS <- function(res, choice = "all", interact = FALSE, col.clust.sti
 
       if (!is.null(res$call$id.info.stim)) {
         dta.info.stim <- as.data.frame(dta.sauv[1 : nbstim, res$call$id.info.stim])
-        colnames(dta.info.stim) <- colnames(dta.sauv)[id.info.stim]
+        colnames(dta.info.stim) <- colnames(dta.sauv)[res$call$id.info.stim]
         rownames(dta.info.stim) <- rownames(dta)
         dta.info.stim <- merge(coord.stim, dta.info.stim, by = "row.names")
         rownames(dta.info.stim) <- dta.info.stim[, 1]
