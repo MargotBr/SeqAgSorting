@@ -1,7 +1,7 @@
 print.AnalyseSAS <- function (res){
 
-  if (!inherits(res, "SAStask")){
-    stop("Non convenient data - res should be a SAStask object")
+  if (!inherits(res, "AnalyseSAS")){
+    stop("Non convenient data - res should be an AnalyseSAS object")
   }
 
   cat("** Results for the analysis of Sequentital Agglomerative Sorting task (SAStask) data **\n")
@@ -10,7 +10,7 @@ print.AnalyseSAS <- function (res){
       "stimuli assessed by", ((ncol(res$call$dta) - length(res$call$id.info.stim))) / length(res$call$sast.parameters), "participants\n")
   cat("The results are available in the following objects:\n\n")
   res.desc <- array("", c(11, 2), list(1 : 11, c("name", "description")))
-  res.desc[1, ] <- c("$call", "arguments used in the analyse.SAS function")
+  res.desc[1, ] <- c("$call", "arguments used in the AnalyseSAS function")
   res.desc[2, ] <- c("$res.mca", "MCA results")
   res.desc[3, ] <- c("$coocc.stim", "cooccurence matrix (similarity matrix between stimuli)")
   res.desc[4, ] <- c("$partition.stim", "clusters of stimuli")

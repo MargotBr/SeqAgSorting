@@ -659,7 +659,7 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
   names(res) <- c("call", "res.mca", "coocc.stim", "consensual.charact.stim", "partition.stim", "charact.clust.stim", "remark.stim", "ARI.part", "partition.part", "res.plot.dendro.part", "cons.partition.stim.clust", "charact.clust.part")
   message("Analysis performed")
   options(warn = 0)
-  class(res) <- c("SAStask", "list ")
+  class(res) <- c("AnalyseSAS", "list ")
   return(res)
 
 }
