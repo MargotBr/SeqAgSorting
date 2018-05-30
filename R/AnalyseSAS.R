@@ -1,7 +1,7 @@
-analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = " ; ", nbtimes.consens.charact = 5, proba.consens.charact = 0.05, id.info.stim = NULL, type.info.stim = NULL, id.info.part = NULL, type.info.part = NULL, axis = c(1, 2), graph = TRUE, ext.dev.Rstudio = FALSE,...) {
-  
+AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = " ; ", nbtimes.consens.charact = 5, proba.consens.charact = 0.05, id.info.stim = NULL, type.info.stim = NULL, id.info.part = NULL, type.info.part = NULL, axis = c(1, 2), graph = TRUE, ext.dev.Rstudio = FALSE,...) {
+
   options(warn = -1)
-  
+
   # load packages
   suppressPackageStartupMessages(require(FactoMineR, quietly = TRUE))
   suppressPackageStartupMessages(require(SensoMineR, quietly = TRUE))
@@ -12,11 +12,11 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   suppressPackageStartupMessages(require(dendextend, quietly = TRUE))
   suppressPackageStartupMessages(require(ggdendro, quietly = TRUE))
   suppressPackageStartupMessages(require(NbClust, quietly = TRUE))
-  
+
   # save the data set
   dta <- as.data.frame(dta)
   dta.sauv <- dta
-  
+
   # function to extract legend
   get.legend <- function(plot){
     tmp <- ggplot_gtable(ggplot_build(plot))
@@ -24,7 +24,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     legend <- tmp$grobs[[leg]]
     return(legend)
   }
-  
+
   # remove external information about raters and stimuli
   if (!is.null(id.info.part)) {
     dta <- dta[-id.info.part,]
@@ -35,18 +35,18 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     dta <- droplevels(dta)
   }
   dta <- apply(dta, 2, as.factor)
-  
+
   # calculate the numbers of raters and stimuli
   nbrater <- ncol(dta) / length(sast.parameters)
   nbstim <- nrow(dta)
-  
+
   # create a res object to save the results
   res <- list()
-  
+
   # return the important arguments
   res[[1]] <- list(dta.sauv, sast.parameters, id.info.part, type.info.part, id.info.stim, type.info.stim, nbtimes.consens.charact, proba.consens.charact, sep.charact, sep.part.step)
   names(res[[1]]) <- c("dta", "sast.parameters", "id.info.part", "type.info.part", "id.info.stim", "type.info.stim", "nbtimes.consens.charact", "proba.consens.charact", "sep.charact", "sep.part.step")
-  
+
   # create the factorial map of the stimuli
   dta.final <- dta[, seq(3, ncol(dta), length(sast.parameters))] # only the final partitions provided by the raters
   res.mca <- MCA(dta.final, graph = FALSE)
@@ -61,11 +61,11 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   rownames(coord.stim) <- coord.stim[, 1]
   coord.stim <- coord.stim[, -1]
   colnames(coord.stim)[1 : 2] <- c("AxeA", "AxeB")
-  
+
   # compute the coocurence matrix
   res.fast <- fast(dta.final, sep.words = sep.charact, graph = FALSE)
   res[[3]] <- res.fast$cooccur
-  
+
   # analyse the verbal characteristics
   res.consensualWords <- ConsensualWords(res.fast, nbtimes = nbtimes.consens.charact, proba = proba.consens.charact, graph = FALSE)
   res[[4]] <- res.consensualWords
@@ -77,11 +77,11 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   coord.stim.charac <- cbind.data.frame(coord.stim.charac, c(rep("stimulus", nrow(coord.stim)), rep("characteristic", nrow(coord.charac))))
   colnames(coord.stim.charac)[4] <- "Type"
   coord.stim.charac$Type <- relevel(coord.stim.charac$Type, ref = "stimulus")
-  
+
   partition.stim <- as.integer(coord.stim$Cluster)
   names(partition.stim) <- rownames(coord.stim)
   res[[5]] <- partition.stim
-    
+
   dta.charact.by.stim <- as.data.frame(matrix(NA, nbstim, 1))
   rownames(dta.charact.by.stim) <- rownames(dta.final)
   colnames(dta.charact.by.stim) <- "Description"
@@ -113,7 +113,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   } else {
     res[[6]] <- res.desc.clust.stim.text
   }
-  
+
   # plot the stimuli representation
   palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
   plot.stim <- ggplot(NULL) +
@@ -165,7 +165,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                              ncol = 1, nrow = 1),
                  legend.plot.stim, nrow = 2, heights = c(8, 1))
   }
-  
+
   # define the remarkability of the stimuli
   compute.contingency <- function(dta) {
     conting <- matrix(NA, nbrater, nbrater)
@@ -206,8 +206,8 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     dta.remark <- cbind.data.frame(dta.remark, compute.remarkability(step = s))
   }
   colnames(dta.remark) <- c("type",
-                            paste(rep(c("contrib", "type"),  length(sast.parameters)),  
-                                  rep(paste0("step", 1 : length(sast.parameters)), each = 2), 
+                            paste(rep(c("contrib", "type"),  length(sast.parameters)),
+                                  rep(paste0("step", 1 : length(sast.parameters)), each = 2),
                                   sep = "_"))
   for (i in 1 : nrow(dta.remark)) {
     if("R" %in% as.character(as.factor(unlist(dta.remark[i, -c(1, seq(2, ncol(dta.remark), by = 2), ncol(dta.remark))])))) {
@@ -222,7 +222,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     }
   }
   res[[7]] <- dta.remark
-  
+
   generate.plot.remark <- function(stim) {
     dta.remark.step <- cbind.data.frame(1 : length(sast.parameters),
                                         t(dta.remark[stim, seq(2, ncol(dta.remark), by = 2)]),
@@ -258,13 +258,13 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
         axis.title.x = element_blank(),
         plot.title = element_text(face = "bold", hjust = 0.5, size = 11, color = "#444444"),
         legend.position = "none"
-      )  
+      )
     return(plot.remark)
   }
   plots.remark <- lapply(1 : nbstim, generate.plot.remark)
-  plot.blank <- ggplot(data.frame()) + 
-    geom_point() + 
-    theme_minimal() + 
+  plot.blank <- ggplot(data.frame()) +
+    geom_point() +
+    theme_minimal() +
     theme(panel.background = element_rect(fill = 'transparent', colour = "transparent"))
   last.plot <- length(plots.remark)
   for (i in 1 : (nbstim - (floor(nbstim/4) * 4))) {
@@ -287,7 +287,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                    nrow = 2, ncol = 2)
     }
   }
-  
+
   # compute supplementary plots about the SAS task
   generate.plot.nb.groups.step <- function(step) {
     vec.group.final <- vector()
@@ -308,8 +308,8 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     }
     nb.group.occ.max <- max(dta.nb.groups$Effectif)
     plot.nb.groups <- ggplot(NULL) +
-      geom_bar(data = dta.nb.groups, aes(x = Nb.group, y = Effectif), stat = "identity", fill = "#444444") + 
-      geom_text(data = dta.nb.groups, aes(x = Nb.group, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) + 
+      geom_bar(data = dta.nb.groups, aes(x = Nb.group, y = Effectif), stat = "identity", fill = "#444444") +
+      geom_text(data = dta.nb.groups, aes(x = Nb.group, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) +
       ggtitle(paste("Number of groups formed during the step", s)) +
       scale_x_discrete(limits = 1 : nb.group.max) +
       theme(
@@ -350,7 +350,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                    nrow = 3, ncol = 1)
     }
   }
-  
+
   generate.plot.nb.stim.group.step <- function(step) {
     vec.stim.final <- vector()
     for (i in 1 : nbrater) {
@@ -370,8 +370,8 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     }
     nb.stim.occ.max <- max(dta.nb.stim$Effectif)
     plot.nb.stim <- ggplot(NULL) +
-      geom_bar(data = dta.nb.stim, aes(x = Nb.stim, y = Effectif), stat = "identity", fill = "#444444") + 
-      geom_text(data = dta.nb.stim, aes(x = Nb.stim, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) + 
+      geom_bar(data = dta.nb.stim, aes(x = Nb.stim, y = Effectif), stat = "identity", fill = "#444444") +
+      geom_text(data = dta.nb.stim, aes(x = Nb.stim, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) +
       ggtitle(paste("Number of stimuli per group during the step", s)) +
       scale_x_discrete(limits = 1 : nb.stim.max) +
       theme(
@@ -412,7 +412,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                    nrow = 3, ncol = 1)
     }
   }
-  
+
   generate.plot.nb.char.group.step <- function(step) {
     vec.char.final <- vector()
     for (i in 1 : nbrater) {
@@ -442,8 +442,8 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     }
     nb.char.occ.max <- max(dta.nb.char$Effectif)
     plot.nb.char <- ggplot(NULL) +
-      geom_bar(data = dta.nb.char, aes(x = Nb.char, y = Effectif), stat = "identity", fill = "#444444") + 
-      geom_text(data = dta.nb.char, aes(x = Nb.char, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) + 
+      geom_bar(data = dta.nb.char, aes(x = Nb.char, y = Effectif), stat = "identity", fill = "#444444") +
+      geom_text(data = dta.nb.char, aes(x = Nb.char, y = Effectif, label = Effectif), vjust = -0.5, color = "#444444", size = 3.5) +
       ggtitle(paste("Number of characteristics cited per group during the step", s)) +
       scale_x_discrete(limits = 1 : nb.char.max) +
       theme(
@@ -484,7 +484,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                    nrow = 3, ncol = 1)
     }
   }
-  
+
   generate.plot.nb.cit.char.step <- function(step) {
     s <- step
     dta.step <- dta[, seq(s, ncol(dta), length(sast.parameters))]
@@ -502,9 +502,9 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
     colnames(dta.nb.cit.char) <- c("Characteristic", "Nb.cit.char")
     nb.cit.char.occ.max <- max(dta.nb.cit.char$Nb.cit.char)
     plot.nb.cit.char <- ggplot(NULL) +
-      geom_bar(data = dta.nb.cit.char, aes(x = Characteristic, y = Nb.cit.char), stat = "identity", fill = "#E5E5E5") + 
-      geom_text(data = dta.nb.cit.char, aes(x = Characteristic, y = 0, label = Nb.cit.char), hjust = 1.3, color = "#444444", size = 3.5) + 
-      geom_text(data = dta.nb.cit.char, aes(x = Characteristic, y = 0.5, label = Characteristic), fontface = "bold", hjust = 0, color = "#444444", size = 3.5) + 
+      geom_bar(data = dta.nb.cit.char, aes(x = Characteristic, y = Nb.cit.char), stat = "identity", fill = "#E5E5E5") +
+      geom_text(data = dta.nb.cit.char, aes(x = Characteristic, y = 0, label = Nb.cit.char), hjust = 1.3, color = "#444444", size = 3.5) +
+      geom_text(data = dta.nb.cit.char, aes(x = Characteristic, y = 0.5, label = Characteristic), fontface = "bold", hjust = 0, color = "#444444", size = 3.5) +
       ggtitle(paste("Number of citations of the most used characteristics during the step", s)) +
       coord_flip() +
       theme(
@@ -533,7 +533,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
       grid.arrange(plots.nb.cit.char.step[[i]][[1]] + ylim(0, max(vec.nb.cit.char.occ.max) + 2), nrow = 1, ncol = 1)
     }
   }
-  
+
   # segment the panel of participants
   sim.mat.part <- as.data.frame(matrix(NA, nbrater, nbrater))
   rownames(sim.mat.part) <- colnames(sim.mat.part) <- gsub(paste0(sep.part.step, ".*$"), "", colnames(dta.final))
@@ -552,7 +552,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   mat.partition <- cbind.data.frame(partition, names(partition))
   colnames(mat.partition) <- c("Cluster", "Rater")
   res[[9]] <- partition
-  
+
   palette.col <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
   dendrogram.info <- as.dendrogram(dendrogram)
   dendrogram.data <- dendro_data(dendrogram.info)
@@ -583,7 +583,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
       legend.position = "none")
   res[[10]] <- list(data.segments, data.labels, dendrogram)
   names(res[[10]]) <- c("data.segments", "data.labels", "dendrogram")
-  
+
   plot.legend.clust.part <- ggplot(NULL) +
     geom_label(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
     scale_fill_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
@@ -604,7 +604,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
                              ncol = 1, nrow = 1),
                  legend.plot.part, nrow = 2, heights = c(8, 1))
   }
-  
+
   consensus.partition.stim <- list()
   for (i in 1 : nlevels(as.factor(partition))) {
     consensus.partition.stim[[i]] <- list()
@@ -631,7 +631,7 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   }
   names(consensus.partition.stim) <- paste0("category", 1 : length(consensus.partition.stim))
   res[[11]] <- consensus.partition.stim
-  
+
   if (!is.null(id.info.part)) {
     dta.info.part <- dta.sauv[id.info.part,]
     if (!is.null(id.info.stim)) {
@@ -654,11 +654,11 @@ analyse.SAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact =
   } else {
     res[12] <- list(NULL)
   }
-  
+
   # return the results
   names(res) <- c("call", "res.mca", "coocc.stim", "consensual.charact.stim", "partition.stim", "charact.clust.stim", "remark.stim", "ARI.part", "partition.part", "res.plot.dendro.part", "cons.partition.stim.clust", "charact.clust.part")
   message("Analysis performed")
   options(warn = 0)
   class(res) <- c("SAStask", "list ")
-  
+
 }
