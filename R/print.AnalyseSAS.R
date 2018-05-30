@@ -14,7 +14,7 @@ print.AnalyseSAS <- function (res){
   res.desc[2, ] <- c("$res.mca", "MCA results")
   res.desc[3, ] <- c("$coocc.stim", "cooccurence matrix (similarity matrix between stimuli)")
   res.desc[4, ] <- c("$partition.stim", "clusters of stimuli")
-  res.desc[5, ] <- c("$emark.stim", "remarkability of the stimuli during the SAS task")
+  res.desc[5, ] <- c("$remark.stim", "remarkability of the stimuli during the SAS task")
   res.desc[6, ] <- c("$consensual.charact.stim", "characteristics used consensually to describe the stimuli")
   res.desc[7, ] <- c("$charact.clust.stim", "automatic description of the clusters of stimuli")
   res.desc[8, ] <- c("$ARI.part", "Adjusted Rand Index matrix (similarity matrix between participants)")
