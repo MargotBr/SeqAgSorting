@@ -8,8 +8,6 @@ plot.AnalyseSAS <- function(res, choice = "all", interact = FALSE, col.clust.sti
   suppressPackageStartupMessages(require(ggplot2, quietly = TRUE))
   suppressPackageStartupMessages(require(ggrepel, quietly = TRUE))
   suppressPackageStartupMessages(require(plotly, quietly = TRUE))
-  # suppressPackageStartupMessages(require(reshape2, quietly = TRUE))
-  # suppressPackageStartupMessages(require(doBy, quietly = TRUE))
 
   # check the format of the arguments
   if (!inherits(res, "AnalyseSAS")) {
@@ -309,6 +307,7 @@ plot.AnalyseSAS <- function(res, choice = "all", interact = FALSE, col.clust.sti
           titlefont = list(size = 16, color = "#444444", facefont = "bold"),
           title = "Participants clustering"
         )
+
       plot.part.interact$x$data[[1]]$text <- rep(NA, length(plot.part.interact$x$data[[1]]$text))
       plot.part.interact$x$data[[2]]$hovertext <- rep(NA, length(plot.part.interact$x$data[[2]]$hovertext))
       for (i in 1 : nlevels(res$res.plot.dendro.part$data.labels$Cluster)) {
