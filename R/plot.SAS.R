@@ -1,7 +1,7 @@
-plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NULL, col.neg.ratings = NULL, col.clust.part = NULL, axis = c(1, 2), ext.dev.Rstudio = FALSE, vignette = FALSE) {
-  
+plot.SAS <- function(res, choice = "all", interact = FALSE, col.clust.stim = NULL, col.clust.part = NULL, axis = c(1, 2), ext.dev.Rstudio = FALSE, vignette = FALSE) {
+
   options(warn = -1)
-  
+
   # load packages
   suppressPackageStartupMessages(require(grid, quietly = TRUE))
   suppressPackageStartupMessages(require(gridExtra, quietly = TRUE))
@@ -10,7 +10,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
   suppressPackageStartupMessages(require(plotly, quietly = TRUE))
   # suppressPackageStartupMessages(require(reshape2, quietly = TRUE))
   # suppressPackageStartupMessages(require(doBy, quietly = TRUE))
-  
+
   # check the format of the arguments
   if (!inherits(res, "SAStask")) {
     stop("Non convenient data - res should be a SAStask object")
@@ -37,7 +37,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
   if (length(axis) != 2 | length(unique(axis)) != 2 | class(axis) != "numeric") {
     stop("Non convenient specification of axis - axis should be a numeric vector of 2 different elements")
   }
-  
+
   # function to extract legend
   get.legend <- function(plot){
     tmp <- ggplot_gtable(ggplot_build(plot))
@@ -45,7 +45,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
     legend <- tmp$grobs[[leg]]
     return(legend)
   }
-  
+
   # calculate the numbers of raters and stimuli
   dta.sauv <- res$call$dta
   if (!is.null(res$call$id.info.part)) {
@@ -63,15 +63,15 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
   nbrater <- ncol(dta) / length(res$call$sast.parameters)
   nbstim <- nrow(dta)
   dta.final <- dta[, seq(3, ncol(dta), by = length(res$call$sast.parameters))]
-  
+
   # stimulus-oriented analysis
   if (!is.na(match("all", choice)) | !is.na(match("stim", choice))) {
-    
+
     if (is.null(col.clust.stim)) {
       col.clust.stim <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
     }
     palette.col <- col.clust.stim
-    
+
     res.mca <- res$res.mca
     coord.stim <- as.data.frame(res.mca$ind$coord[, axis])
     coord.stim <- as.data.frame(res.mca$ind$coord[, axis])
@@ -83,7 +83,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
     rownames(coord.stim) <- coord.stim[, 1]
     coord.stim <- coord.stim[, -1]
     colnames(coord.stim)[1 : 2] <- c("AxeA", "AxeB")
-    
+
     wordsCons <- res$consensual.charact.stim$Consensual.words
     coord.charac <- cbind.data.frame(res$consensual.charact.stim$Centroids[which(rownames(res$consensual.charact.stim$Centroids)%in%wordsCons), axis],
                                      Cluster = rep(as.character(nlevels(coord.stim$Cluster)+1), length(wordsCons)))
@@ -92,9 +92,9 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
     coord.stim.charac <- cbind.data.frame(coord.stim.charac, c(rep("stimulus", nrow(coord.stim)), rep("characteristic", nrow(coord.charac))))
     colnames(coord.stim.charac)[4] <- "Type"
     coord.stim.charac$Type <- relevel(coord.stim.charac$Type, ref = "stimulus")
-  
+
     if (interact == FALSE) {
-      
+
       plot.stim <- ggplot(NULL) +
         labs(x = paste("Dim ", 1," - ", round(res.mca$eig[axis[1], 2], 2), " %", sep = ""), y = paste("Dim ", 2, " - ", round(res.mca$eig[axis[2], 2], 2), " %", sep = "")) +
         coord_fixed()+
@@ -134,16 +134,16 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
       grid.arrange(arrangeGrob(plot.stim + theme(legend.position="none"),
                                ncol = 1, nrow = 1),
                    legend.plot.stim, nrow = 2, heights = c(8, 1))
-      
+
     } else if (interact == TRUE) {
-      
+
       text.tooltip.stim <- paste("Stimulus:", rownames(coord.stim), '<br>Cluster:', gsub("Cluster ", "", coord.stim$Cluster))
-      
+
       dta.info.stim.remark <- as.data.frame(res$remark.stim[, 1])
       rownames(dta.info.stim.remark) <- rownames(res$remark.stim)
       dta.info.stim.remark <- merge(coord.stim, dta.info.stim.remark, by = "row.names")
       text.tooltip.stim <- paste(text.tooltip.stim, paste("Remarkability during the SAS task:", dta.info.stim.remark[, ncol(dta.info.stim.remark)]), sep = " <br>")
-      
+
       if (!is.null(res$call$id.info.stim)) {
         dta.info.stim <- as.data.frame(dta.sauv[1 : nbstim, res$call$id.info.stim])
         colnames(dta.info.stim) <- colnames(dta.sauv)[id.info.stim]
@@ -155,8 +155,8 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
         for (i in 2 : ncol(dta.info.stim)) {
           text.tooltip.stim <- paste(text.tooltip.stim, paste0("<br>", colnames(dta.info.stim)[i], ": ", as.character(dta.info.stim[,i])))
         }
-      } 
-      
+      }
+
       dta.charact.by.stim <- as.data.frame(matrix(NA, nbstim, 1))
       rownames(dta.charact.by.stim) <- rownames(dta.final)
       colnames(dta.charact.by.stim) <- "Description"
@@ -176,17 +176,17 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
           sign.pval <- rep(NA, nrow(res.desc.clust.stim.text[[i]]))
           sign.pval[which(res.desc.clust.stim.text[[i]][, "v.test"] > 0)] <- "+"
           sign.pval[which(res.desc.clust.stim.text[[i]][, "v.test"] < 0)] <- "-"
-          dta.info.stim.text[i, 1] <- paste(paste(sign.pval, rownames(res.desc.clust.stim.text[[i]])), collapse = " <br>") 
+          dta.info.stim.text[i, 1] <- paste(paste(sign.pval, rownames(res.desc.clust.stim.text[[i]])), collapse = " <br>")
         }
       }
       dta.info.stim.text[which(is.na(dta.info.stim.text[, "Description"])), "Description"] <- ""
       text.tooltip.stim <- paste(text.tooltip.stim, dta.info.stim.text[, "Description"], sep = " <br>")
-      
+
       coord.stim$Cluster <- paste("Cluster", coord.stim$Cluster)
       col.interact.stim <- palette.col[1 : nlevels(as.factor(coord.stim$Cluster))]
-      
+
       text.tooltip.char <- rownames(coord.charac)
-      
+
       plot.stim.interact <- plot_ly() %>%
         add_trace(coord.stim,
                   x = ~coord.stim$AxeA ,
@@ -207,7 +207,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
                   type = "scatter", mode = "markers",
                   marker = list(size = 6, symbol = "triangle-up", color = "#444444"),
                   name = "characteristic",
-                  showlegend = TRUE, 
+                  showlegend = TRUE,
                   legendgroup = 'group2') %>%
         layout(
           legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -0.25),
@@ -229,17 +229,17 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
       }
     }
   }
-  
+
   # participant-oriented analysis
   if (!is.na(match("all", choice)) | !is.na(match("part", choice))) {
-    
+
     if (is.null(col.clust.part)) {
       col.clust.part <- c("#90B08F", "#EA485C", "#FF8379", "#009193", "#FFCEA5", "#A9A9A9", "#B0983D", "#941751", "#333333", "#A8D9FF")
     }
     palette.col <- col.clust.part
-    
+
     if (interact == FALSE) {
-      
+
       plot.dendro <- ggplot(NULL) +
         geom_segment(data = res$res.plot.dendro.part$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "#444444") +
         geom_text(data = res$res.plot.dendro.part$data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, colour = Cluster), size = 2.1) +
@@ -259,7 +259,7 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
           axis.ticks.y = element_blank(),
           axis.ticks.x = element_blank(),
           axis.text.x = element_blank(),
-          legend.position = "none") 
+          legend.position = "none")
       plot.legend.clust.part <- ggplot(NULL) +
         geom_label(data = data.labels, aes(label = Rater, x = x, y = -0.1, angle = 90, hjust = 1, fill = Cluster), colour = "transparent") +
         scale_fill_manual(values = palette.col[1 : nlevels(data.labels$Cluster)]) +
@@ -279,9 +279,9 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
                                ncol = 1, nrow = 1),
                    legend.plot.part, nrow = 2, heights = c(8, 1))
     } else if (interact == TRUE) {
-      
+
       res$res.plot.dendro.part$data.labels$Cluster <- as.factor(paste("Cluster", res$res.plot.dendro.part$data.labels$Cluster))
-      
+
       plot.dendro <- ggplot(NULL) +
         geom_segment(data = res$res.plot.dendro.part$data.segments, aes(x = x, y = y, xend = xend, yend = yend), colour = "#444444") +
         geom_text(data = res$res.plot.dendro.part$data.labels, aes(label = Rater, x = x, y = -0.15, angle = 90, hjust = 1), size = 2.1) +
@@ -300,8 +300,8 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
           axis.title.y = element_blank(),
           axis.ticks.y = element_blank(),
           axis.ticks.x = element_blank(),
-          axis.text.x = element_blank()) 
-    
+          axis.text.x = element_blank())
+
       plot.part.interact <- ggplotly(plot.dendro)  %>%
         layout(
           legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -3),
@@ -341,14 +341,13 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.pos.ratings = NU
           print(plot.part.interact)
         }
       }
-      
+
     }
-    
+
   }
 
   # end the function
   options(warn = 0)
   return(message("Representations plotted"))
-    
+
 }
-  
