@@ -1,9 +1,9 @@
-print.analyse.SAS <- function (res){
-  
+print.AnalyseSAS <- function (res){
+
   if (!inherits(res, "SAStask")){
     stop("Non convenient data - res should be a SAStask object")
   }
-  
+
   cat("** Results for the analysis of Sequentital Agglomerative Sorting task (SAStask) data **\n")
   cat("\n")
   cat("The analysis was performed on", (nrow(res$call$dta) - length(res$call$id.info.part)),
@@ -22,5 +22,5 @@ print.analyse.SAS <- function (res){
   res.desc[10, ] <- c("$cons.partition.stim.clust", "consensus partition of the simuli per cluster of participants")
   res.desc[11, ] <- c("$charact.clust.part", "automatic description of the clusters of participants")
   print(res.desc)
-  
+
 }
