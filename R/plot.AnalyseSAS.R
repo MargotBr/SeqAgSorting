@@ -1,4 +1,4 @@
-plot.SAS <- function(res, choice = "all", interact = FALSE, col.clust.stim = NULL, col.clust.part = NULL, axis = c(1, 2), ext.dev.Rstudio = FALSE, vignette = FALSE) {
+plot.AnalyseSAS <- function(res, choice = "all", interact = FALSE, col.clust.stim = NULL, col.clust.part = NULL, axis = c(1, 2), ext.dev.Rstudio = FALSE, vignette = FALSE) {
 
   options(warn = -1)
 
@@ -12,8 +12,8 @@ plot.SAS <- function(res, choice = "all", interact = FALSE, col.clust.stim = NUL
   # suppressPackageStartupMessages(require(doBy, quietly = TRUE))
 
   # check the format of the arguments
-  if (!inherits(res, "SAStask")) {
-    stop("Non convenient data - res should be a SAStask object")
+  if (!inherits(res, "AnalyseSAS")) {
+    stop("Non convenient data - res should be an AnalyseSAS object")
   }
   choice <- match.arg(choice, c("all", "stim", "part"), several.ok = TRUE)
   mat.partition.stim <- cbind.data.frame(res$partition.stim, names(res$partition.stim))
