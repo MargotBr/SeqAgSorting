@@ -553,7 +553,10 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
   res[[8]] <- sim.mat.part
   dissim.mat.part <- as.dist(1 - sim.mat.part)
   dendrogram <- stats::hclust(dissim.mat.part, method = "ward.D2")
-  nb.clust.part <- NbClust(diss = dissim.mat.part, distance = NULL, method = "ward.D2", index = "mcclain",  min.nc = 2, max.nc = 6)$Best.nc[1]
+  sink(file = "undesired message")
+  nb.clust.part <- invisible(NbClust(diss = dissim.mat.part, distance = NULL, method = "ward.D2", index = "mcclain",  min.nc = 2, max.nc = 6)$Best.nc[1])
+  sink()
+  file.remove("undesired message")
   partition <- cutree(dendrogram, k = nb.clust.part)
   mat.partition <- cbind.data.frame(partition, names(partition))
   colnames(mat.partition) <- c("Cluster", "Rater")
