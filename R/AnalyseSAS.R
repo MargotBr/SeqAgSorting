@@ -1,4 +1,4 @@
-AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = " ; ", nbtimes.consens.charact = 5, proba.consens.charact = 0.05, id.info.stim = NULL, type.info.stim = NULL, id.info.part = NULL, type.info.part = NULL, axis = c(1, 2), graph = TRUE, ext.dev.Rstudio = FALSE,...) {
+AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = " ; ", nbtimes.consens.charact = 5, proba.consens.charact = 0.05, id.info.stim = NULL, type.info.stim = NULL, id.info.part = NULL, type.info.part = NULL, axis = c(1, 2), graph = TRUE, ext.dev.Rstudio = FALSE) {
 
   options(warn = -1)
 
@@ -39,6 +39,9 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
   # calculate the numbers of raters and stimuli
   nbrater <- ncol(dta) / length(sast.parameters)
   nbstim <- nrow(dta)
+  if (nbstim != sum(sast.parameters)) {
+    stop("Non convenient argument - SAS paramaters does not correpond to the size of the set of stimuli")
+  }
 
   # create a res object to save the results
   res <- list()
@@ -63,7 +66,10 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
   colnames(coord.stim)[1 : 2] <- c("AxeA", "AxeB")
 
   # compute the coocurence matrix
-  res.fast <- fast(dta.final, sep.words = sep.charact, graph = FALSE)
+  sink(file = "undesired message")
+  res.fast <- invisible(fast(dta.final, sep.words = sep.charact, graph = FALSE))
+  sink()
+  file.remove("undesired message")
   res[[3]] <- res.fast$cooccur
 
   # analyse the verbal characteristics
