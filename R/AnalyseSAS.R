@@ -185,6 +185,18 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
     }
     return(conting)
   }
+  compute.nb.pres <- function(dta) {
+    present <- matrix(NA, nbrater, nbrater)
+    rownames(present) <- colnames(present) <- rownames(dta)
+    for (i in 1 : ncol(present)) {
+      for (j in 1 : ncol(present)) {
+        pres.pdt1 <- which(dta[i,] != "")
+        pres.pdt2 <- which(dta[j,] != "")
+        present[i, j] <- present[j, i] <- length(which(duplicated(c(pres.pdt1, pres.pdt2))))
+      }
+    }
+    return(present)
+  }
   compute.remarkability <- function(step) {
     s <- step
     dta.step <- dta[, seq(s, ncol(dta), length(sast.parameters))]
