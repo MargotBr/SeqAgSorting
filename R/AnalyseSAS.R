@@ -197,7 +197,10 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
       vec.remark[which(contrib < quantile(contrib, probs = 0.85))] <- "I"
     } else {
       dta.compt.step <- compute.contingency(dta.step)
-      res.ca.step <- CA(dta.compt.step, graph = FALSE)
+      dta.pres.step <- compute.nb.pres(dta.step)
+      dta.compt.pond.step <- dta.compt.step / dta.pres.step
+      dta.compt.pond.step[which(is.na(dta.compt.pond.step))] <- 0
+      res.ca.step <- CA(dta.compt.pond.step, graph = FALSE)
       contrib <- apply(res.ca.step$row$contrib[, 1 : 2], 1, "sum")
       vec.remark <- vector(length = nbstim)
       names(vec.remark) <- rownames(dta.step)
