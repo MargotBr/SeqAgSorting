@@ -94,7 +94,7 @@ plot.AnalyseSAS <- function(res, choice = "all", interact = FALSE, col.clust.sti
     if (interact == FALSE) {
 
       plot.stim <- ggplot(NULL) +
-        labs(x = paste("Dim ", 1," - ", round(res.mca$eig[axis[1], 2], 2), " %", sep = ""), y = paste("Dim ", 2, " - ", round(res.mca$eig[axis[2], 2], 2), " %", sep = "")) +
+        labs(x = paste("Dim ", axis[1]," - ", round(res.mca$eig[axis[1], 2], 2), " %", sep = ""), y = paste("Dim ", axis[2], " - ", round(res.mca$eig[axis[2], 2], 2), " %", sep = "")) +
         coord_fixed()+
         geom_hline(yintercept = 0, linetype = 2, color = "#444444", size = 0.2) +
         geom_vline(xintercept = 0,  linetype = 2, color = "#444444", size = 0.2) +

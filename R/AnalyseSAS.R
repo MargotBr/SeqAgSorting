@@ -174,7 +174,7 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
 
   # define the remarkability of the stimuli
   compute.contingency <- function(dta) {
-    conting <- matrix(NA, nbrater, nbrater)
+    conting <- matrix(NA, nbstim, nbstim)
     rownames(conting) <- colnames(conting) <- rownames(dta)
     for (i in 1 : ncol(conting)) {
       for (j in 1 : ncol(conting)) {
@@ -186,7 +186,7 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
     return(conting)
   }
   compute.nb.pres <- function(dta) {
-    present <- matrix(NA, nbrater, nbrater)
+    present <- matrix(NA, nbstim, nbstim)
     rownames(present) <- colnames(present) <- rownames(dta)
     for (i in 1 : ncol(present)) {
       for (j in 1 : ncol(present)) {
