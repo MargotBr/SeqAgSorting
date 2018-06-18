@@ -515,12 +515,13 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
       dta.step <- as.vector(dta.step)[-which(as.vector(dta.step) == "")]
     }
     vec.cit.char.step <- table(unlist(strsplit(dta.step, sep.charact)))
-    vec.cit.char.step <- sort(vec.cit.char.step, decreasing = FALSE)
+    vec.cit.char.step <- sort(vec.cit.char.step, decreasing = TRUE)
     if (length(vec.cit.char.step) > 15) {
       vec.cit.char.step <- vec.cit.char.step[1 : 15]
     }
     dta.nb.cit.char <- as.data.frame(vec.cit.char.step)
     colnames(dta.nb.cit.char) <- c("Characteristic", "Nb.cit.char")
+    dta.nb.cit.char$Characteristic <- factor(dta.nb.cit.char$Characteristic, levels = levels(dta.nb.cit.char$Characteristic)[nlevels(dta.nb.cit.char$Characteristic) : 1])
     nb.cit.char.occ.max <- max(dta.nb.cit.char$Nb.cit.char)
     plot.nb.cit.char <- ggplot(NULL) +
       geom_bar(data = dta.nb.cit.char, aes(x = Characteristic, y = Nb.cit.char), stat = "identity", fill = "#E5E5E5") +
