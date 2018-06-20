@@ -67,6 +67,15 @@ A boolean specifying if the graphical outputs should be plotted in the Rstudio p
 data(pedagdata)
 res.pedag <- AnalyseSAS(dta = pedagdata, sast.parameters = c(4, 3, 3), id.info.stim = 31, type.info.stim = "cat", id.info.part = 11 : 12, type.info.part = rep("cat", 2), nbtimes.consens.charact = 2, proba.consens.charact = 0.10, graph = FALSE)
 res.pedag
+
+# Perfumes data set
+res.perfumes <- AnalyseSAS(dta = perfumes, sast.parameters = c(12, 14, 14), id.info.part = 40 : 41, type.info.part = rep("cont", 2))
+res.perfumes
+
+# Lemon tart recipes data set
+data(lemontart)
+res.lemontart <- AnalyseSAS(dta = lemontart, sast.parameters = c(9, 9, 9), sep.charact = " ", id.info.stim = 199 : 201, type.info.stim = rep("cont", 3), id.info.part = 28 : 30, type.info.part = rep("cont", 3))
+res.lemontart
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
