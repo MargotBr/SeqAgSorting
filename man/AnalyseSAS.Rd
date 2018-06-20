@@ -69,7 +69,7 @@ res.pedag <- AnalyseSAS(dta = pedagdata, sast.parameters = c(4, 3, 3), id.info.s
 res.pedag
 
 # Perfumes data set
-res.perfumes <- AnalyseSAS(dta = perfumes, sast.parameters = c(12, 14, 14), id.info.part = 41 : 42, type.info.part = rep("cont", 2))
+res.perfumes <- AnalyseSAS(dta = perfumes, sast.parameters = c(12, 14, 14), sep.charact = " ", id.info.part = 41 : 42, type.info.part = rep("cont", 2))
 res.perfumes
 
 # Lemon tart recipes data set
