@@ -264,7 +264,7 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
       ylim(0, max.contrib + 5) +
       geom_line(data = dta.remark.step, aes(Step, Contribution), color = "#444444") +
       geom_point(data = dta.remark.step, aes(Step, Contribution, color = Type), size = 4) +
-      geom_text(data = dta.remark.step, aes(x = Step, y = (Contribution + 6), label = Type, color = Type), size = 4) +
+      geom_text(data = dta.remark.step, aes(x = Step, y = (Contribution + 3), label = Type, color = Type), size = 4) +
       scale_x_discrete(labels = paste("Step", 1 : length(sast.parameters)),
                        limits = 1 : 3) +
       scale_color_manual(values = palette.col.remark) +
