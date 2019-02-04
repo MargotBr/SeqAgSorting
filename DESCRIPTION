@@ -1,11 +1,11 @@
-Package: SAStask
+Package: SeqAgSorting
 Type: Package
 Title: Statistical analysis of Sequential Agglomerative Sorting task data (stimulus-oriented analysis and participant-oriented analysis)
 Version: 1.0
 Date: 2018-05-30
 Author: Margot Brard, Sebastien Le
 Maintainer: Margot Brard <margot.brard@agrocampus-ouest.fr>
-Description: The SAStask package first analyses data trough a stimulus-oriented approach. In this context, it considers a Multiple Correspondance Analysis performed on the final partitions of the stimuli provided by the participants. This procedure provides a multidimensional representation of the stimuli. On this representation, two stimuli are close (resp. distant) if they have been perceived as sensorially similar (resp. different) by the participants. The SAStask package then analyses data trough a participant-oriented approach. In this context, the structure of disagreement among the panel of participants is studied through the computation of a dissimilarity index. This index corresponds to 1 - ARI, ARI being the Adjusted Rand Index between the partitions of the stimuli provided by the two corresponding participants. Finally, this participant-oriented approach provides a segmentation of the participants, each cluster of participants being assimilated to a pattern of perception of stimuli.
+Description: The SeqAgSorting package first analyses data trough a stimulus-oriented approach. In this context, it considers a Multiple Correspondance Analysis performed on the final partitions of the stimuli provided by the participants. This procedure provides a multidimensional representation of the stimuli. On this representation, two stimuli are close (resp. distant) if they have been perceived as sensorially similar (resp. different) by the participants. The SeqAgSorting package then analyses data trough a participant-oriented approach. In this context, the structure of disagreement among the panel of participants is studied through the computation of a dissimilarity index. This index corresponds to 1 - ARI, ARI being the Adjusted Rand Index between the partitions of the stimuli provided by the two corresponding participants. Finally, this participant-oriented approach provides a segmentation of the participants, each cluster of participants being assimilated to a pattern of perception of stimuli.
 License: 
 Encoding: UTF-8
 Suggests: knitr,

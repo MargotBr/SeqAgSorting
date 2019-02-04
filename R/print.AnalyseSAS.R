@@ -4,7 +4,7 @@ print.AnalyseSAS <- function (res){
     stop("Non convenient data - res should be an AnalyseSAS object")
   }
 
-  cat("** Results for the analysis of Sequentital Agglomerative Sorting task (SAStask) data **\n")
+  cat("** Results for the analysis of Sequentital Agglomerative Sorting task data **\n")
   cat("\n")
   cat("The analysis was performed on", (nrow(res$call$dta) - length(res$call$id.info.part)),
       "stimuli assessed by", ((ncol(res$call$dta) - length(res$call$id.info.stim))) / length(res$call$sast.parameters), "participants\n")

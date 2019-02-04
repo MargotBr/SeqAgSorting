@@ -1,12 +1,12 @@
-\name{SAStask-package}
-\alias{SAStask-package}
-\alias{SAStask}
+\name{SeqAgSorting-package}
+\alias{SeqAgSorting-package}
+\alias{SeqAgSorting}
 \docType{package}
 \title{
-\packageTitle{SAStask}
+\packageTitle{SeqAgSorting}
 }
 \description{
-\packageDescription{SAStask}
+\packageDescription{SeqAgSorting}
 }
 
 \author{
