@@ -259,8 +259,9 @@ AnalyseSAS <- function(dta, sast.parameters, sep.part.step = "_", sep.charact = 
     } else {
       col.background = "white"
     }
+    max.contrib <- max(apply(dta.remark[, which(colnames(dta.remark) %in% grep('contrib', colnames(dta.remark), value=TRUE))], 2, max))
     plot.remark <- ggplot(NULL) +
-      ylim(0, 100) +
+      ylim(0, max.contrib + 5) +
       geom_line(data = dta.remark.step, aes(Step, Contribution), color = "#444444") +
       geom_point(data = dta.remark.step, aes(Step, Contribution, color = Type), size = 4) +
       geom_text(data = dta.remark.step, aes(x = Step, y = (Contribution + 6), label = Type, color = Type), size = 4) +
