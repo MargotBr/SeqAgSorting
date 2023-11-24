@@ -1,4 +1,4 @@
-print.AnalyseSAS <- function (res){
+print.analyse_sas <- function (res){
 
   if (!inherits(res, "AnalyseSAS")){
     stop("Non convenient data - res should be an AnalyseSAS object")
